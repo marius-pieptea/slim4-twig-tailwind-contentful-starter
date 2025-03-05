@@ -1,0 +1,414 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ blogPost.title }}
+	|
+	{{ site.name }}
+{% endblock %}
+
+{% block meta %}
+	<meta
+	name="description" content="{% if blogPost.excerpt %}{{ blogPost.excerpt|striptags|slice(0, 160) }}{% else %}{{ blogPost.title }} - {{ site.meta_description|default('Article from our blog') }}{% endif %}">
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="article">
+	<meta property="og:url" content="{{ full_url_for('blog-post', {'slug': blogPost.slug}) }}">
+	<meta property="og:title" content="{{ blogPost.title }} | {{ site.name }}">
+	<meta property="og:description" content="{% if blogPost.excerpt %}{{ blogPost.excerpt|striptags|slice(0, 160) }}{% else %}{{ blogPost.title }} - {{ site.meta_description|default('Article from our blog') }}{% endif %}">
+	{% if blogPost.featuredImage.url %}
+		<meta property="og:image" content="{{ blogPost.featuredImage.url }}">
+	{% endif %}
+
+	<!-- Twitter -->
+	<meta property="twitter:card" content="summary_large_image">
+	<meta property="twitter:url" content="{{ full_url_for('blog-post', {'slug': blogPost.slug}) }}">
+	<meta property="twitter:title" content="{{ blogPost.title }} | {{ site.name }}">
+	<meta property="twitter:description" content="{% if blogPost.excerpt %}{{ blogPost.excerpt|striptags|slice(0, 160) }}{% else %}{{ blogPost.title }} - {{ site.meta_description|default('Article from our blog') }}{% endif %}">
+	{% if blogPost.featuredImage.url %}
+		<meta property="twitter:image" content="{{ blogPost.featuredImage.url }}">
+	{% endif %}
+
+	<!-- Canonical URL -->
+	<link
+	rel="canonical" href="{{ full_url_for('blog-post', {'slug': blogPost.slug}) }}">
+
+	<!-- Additional Keywords -->
+	<meta
+	name="keywords" content="{{blogPost.keywords|default(site.keywords)}}">
+
+	<!-- Article Meta -->
+	{% if blogPost.date %}
+		<meta property="article:published_time" content="{{ blogPost.dateISO|default(blogPost.date) }}">
+	{% endif %}
+	<meta property="article:section" content="{{ blogPost.category|default('Blog') }}">
+{% endblock %}
+
+{% block content %}
+	<!-- Header Banner -->
+	<div class="bg-gradient-to-r from-gray-900 to-black py-12 md:py-16">
+		<div class="container mx-auto px-6">
+			<div
+				class="max-w-4xl mx-auto">
+				<!-- Breadcrumb -->
+				<div class="flex items-center text-sm text-gray-400 mb-6" data-aos="fade-right" data-aos-duration="800">
+					<a href="{{ url_for('home') }}" class="hover:text-white transition-colors">Home</a>
+					<svg class="h-4 w-4 mx-2" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+					</svg>
+					<a href="{{ url_for('blog') }}" class="hover:text-white transition-colors">Blog</a>
+					<svg class="h-4 w-4 mx-2" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+					</svg>
+					<span class="text-white truncate">{{ blogPost.title }}</span>
+				</div>
+
+				<!-- Category Badge -->
+				<div class="inline-block bg-yellow-400 text-black px-3 py-1 rounded-full text-xs font-semibold tracking-wide mb-4" data-aos="fade-right" data-aos-duration="800" data-aos-delay="100">
+					{{ blogPost.category|default('Article') }}
+				</div>
+
+				<!-- Post Title -->
+				<h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight" data-aos="fade-right" data-aos-duration="800" data-aos-delay="200">
+					{{ blogPost.title }}
+				</h1>
+
+				<!-- Author and Date -->
+				<div class="flex items-center space-x-4" data-aos="fade-right" data-aos-duration="800" data-aos-delay="300">
+					<img src="{{ blogPost.author.image|default('/img/default-author.avif') }}" alt="{{ blogPost.author.name|default('Author') }}" class="w-10 h-10 rounded-full">
+					<div>
+						<p class="text-white font-medium">{{ blogPost.author.name|default('Author Name') }}</p>
+						<p class="text-gray-400 text-sm">{{ blogPost.date|default('Publication Date') }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Main Content Section -->
+	<div class="container mx-auto px-6 py-12 md:py-16">
+		<div
+			class="max-w-3xl mx-auto">
+			<!-- Featured Image -->
+			{% if blogPost.featuredImage.url %}
+				<div class="mb-8 -mt-24 relative z-10 shadow-xl rounded-lg overflow-hidden" data-aos="fade-up" data-aos-duration="800">
+					<img src="{{ blogPost.featuredImage.url }}" alt="{{ blogPost.featuredImage.title|default(blogPost.title) }}" class="w-full object-cover" {% if blogPost.featuredImage.height %} height="{{ blogPost.featuredImage.height }}" {% endif %}>
+					{% if blogPost.featuredImage.description %}
+						<div class="bg-gray-900 bg-opacity-70 text-white text-sm py-2 px-4">
+							{{ blogPost.featuredImage.description }}
+						</div>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			<!-- Excerpt / Introduction -->
+			<div class="mb-8 leading-relaxed text-lg text-gray-700" data-aos="fade-up" data-aos-duration="800">
+				{{ blogPost.excerpt|default('') }}
+			</div>
+
+			<!-- Article Content -->
+			<div class="prose prose-lg max-w-none markdown-content" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+				{{ blogPost.bodyHtml|raw }}
+			</div>
+
+			<!-- Tags -->
+			{% if blogPost.tags is defined and blogPost.tags|length > 0 %}
+				<div class="mt-10 pt-6 border-t border-gray-200" data-aos="fade-up" data-aos-duration="800">
+					<div class="flex flex-wrap gap-2">
+						{% for tag in blogPost.tags %}
+							<a href="{{ url_for('blog', {'tag': tag}) }}" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full text-sm text-gray-700 transition-colors">
+								#{{ tag }}
+							</a>
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+
+			<!-- Social Share -->
+			<div class="mt-8 pt-6 border-t border-gray-200" data-aos="fade-up" data-aos-duration="800">
+				<h3 class="font-semibold text-gray-800 mb-3">Share this article</h3>
+				<div class="flex space-x-3">
+					<a href="https://www.facebook.com/sharer/sharer.php?u={{ full_url_for('blog-post', {'slug': blogPost.slug})|url_encode }}" class="bg-[#3b5998] text-white w-10 h-10 rounded-full flex items-center justify-center hover:opacity-90 transition-opacity" target="_blank" aria-label="Share on Facebook">
+						<i class="fab fa-facebook-f"></i>
+					</a>
+					<a href="https://twitter.com/intent/tweet?url={{ full_url_for('blog-post', {'slug': blogPost.slug})|url_encode }}&text={{ blogPost.title|url_encode }}" class="bg-[#1DA1F2] text-white w-10 h-10 rounded-full flex items-center justify-center hover:opacity-90 transition-opacity" target="_blank" aria-label="Share on Twitter">
+						<i class="fab fa-twitter"></i>
+					</a>
+					<a href="https://www.linkedin.com/shareArticle?mini=true&url={{ full_url_for('blog-post', {'slug': blogPost.slug})|url_encode }}&title={{ blogPost.title|url_encode }}" class="bg-[#0077b5] text-white w-10 h-10 rounded-full flex items-center justify-center hover:opacity-90 transition-opacity" target="_blank" aria-label="Share on LinkedIn">
+						<i class="fab fa-linkedin-in"></i>
+					</a>
+					<a href="mailto:?subject={{ blogPost.title|url_encode }}&body={{ full_url_for('blog-post', {'slug': blogPost.slug})|url_encode }}" class="bg-gray-700 text-white w-10 h-10 rounded-full flex items-center justify-center hover:opacity-90 transition-opacity" target="_blank" aria-label="Share via Email">
+						<i class="fas fa-envelope"></i>
+					</a>
+				</div>
+			</div>
+
+			<!-- Author Bio -->
+			{% if blogPost.author.bio is defined %}
+				<div class="mt-10 bg-gray-50 rounded-xl p-6 md:p-8 flex flex-col md:flex-row gap-6" data-aos="fade-up" data-aos-duration="800">
+					<img src="{{ blogPost.author.image|default('/img/default-author.avif') }}" alt="{{ blogPost.author.name|default('Author') }}" class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover">
+					<div>
+						<h3 class="text-xl font-bold mb-2">{{ blogPost.author.name|default('Author Name') }}</h3>
+						<p class="text-gray-600">{{ blogPost.author.bio }}</p>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+	<!-- Call to Action -->
+	<section class="py-16 md:py-20 bg-white">
+		<div class="container mx-auto px-6">
+			<div class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl py-12 px-8 md:px-12 text-center text-white shadow-xl">
+				<h2 class="text-3xl md:text-4xl font-bold mb-6" data-aos="fade-up" data-aos-duration="800">
+					{{ blogPost.cta.heading|default('Ready to take the next step?') }}
+				</h2>
+				<p class="text-lg text-gray-300 mb-8 max-w-2xl mx-auto" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+					{{ blogPost.cta.text|default('Get in touch with us to discuss how we can help you achieve your goals. Our team is ready to provide the solutions you need.') }}
+				</p>
+				<a href="{{ blogPost.cta.button_url|default('/contact') }}" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-8 py-3 rounded-md shadow-md transition-all duration-300 transform hover:-translate-y-1" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
+					{{ blogPost.cta.button_text|default('Contact Us') }}
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- Related Articles -->
+	{% if blogPost.relatedPosts is defined and blogPost.relatedPosts|length > 0 %}
+		<section class="bg-gray-50 py-16" data-aos="fade-up" data-aos-duration="800">
+			<div class="container mx-auto px-6">
+				<h2 class="text-3xl font-bold mb-12 text-center">{{ blogPost.related_heading|default('Related Articles') }}</h2>
+				<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+					{% for relatedPost in blogPost.relatedPosts %}
+						<div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:-translate-y-2" data-aos="fade-up" data-aos-duration="800" data-aos-delay="{{ 100 * loop.index }}">
+							{% if relatedPost.featuredImage.url %}
+								<a href="{{ url_for('blog-post', {'slug': relatedPost.slug}) }}" class="block h-48 overflow-hidden">
+									<img src="{{ relatedPost.featuredImage.url }}" alt="{{ relatedPost.featuredImage.title|default(relatedPost.title) }}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+								</a>
+							{% endif %}
+							<div class="p-6">
+								{% if relatedPost.category %}
+									<span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full mb-3">
+										{{ relatedPost.category }}
+									</span>
+								{% endif %}
+								<a href="{{ url_for('blog-post', {'slug': relatedPost.slug}) }}" class="block hover:text-yellow-500 transition-colors">
+									<h3 class="text-xl font-bold mb-2 leading-tight">{{ relatedPost.title }}</h3>
+								</a>
+								<p class="text-gray-600 mb-4">
+									{{ relatedPost.excerpt|striptags|slice(0, 100) }}...
+								</p>
+								<div class="flex items-center justify-between">
+									<span class="text-gray-500 text-sm">{{ relatedPost.date }}</span>
+									<a href="{{ url_for('blog-post', {'slug': relatedPost.slug}) }}" class="text-yellow-500 font-medium hover:underline flex items-center">
+										Read more
+										<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+										</svg>
+									</a>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</section>
+	{% endif %}
+
+	<!-- Structured Data for Blog Post -->
+	<script type="application/ld+json">
+		{
+				            "@context": "https://schema.org",
+				            "@type": "BlogPosting",
+				            "headline": "{{ blogPost.title }}",
+				            "description": "
+		{% if blogPost.excerpt %}
+			{{ blogPost.excerpt|striptags|slice(0, 160) }}
+		{% else %}
+			{{ blogPost.title }}
+			-
+			{{ site.meta_description|default('Article from our blog') }}
+		{% endif %}",
+				            "author": {
+				                "@type": "Person",
+				                "name": "{{ blogPost.author.name|default('Author Name') }}"
+				            },
+				            "publisher": {
+				                "@type": "Organization",
+				                "name": "{{ site.name }}",
+				                "logo": {
+				                    "@type": "ImageObject",
+				                    "url": "{{ url_for('home') }}img/logo.svg"
+				                }
+				            },
+		{% if blogPost.dateISO %}
+			"datePublished": "{{ blogPost.dateISO }}",
+						                "dateModified": "{{ blogPost.dateISO }}",
+		{% endif %}
+		"mainEntityOfPage": {
+				                "@type": "WebPage",
+				                "@id": "{{ full_url_for('blog-post', {'slug': blogPost.slug}) }}"
+				            },
+		{% if blogPost.featuredImage.url %}
+			"image": "{{ blogPost.featuredImage.url }}",
+		{% endif %}
+		"articleSection": "{{ blogPost.category|default('Blog') }}"
+				        }
+	</script>
+
+	<!-- Structured Data for BreadcrumbList -->
+	<script type="application/ld+json">
+		{
+				            "@context": "https://schema.org",
+				            "@type": "BreadcrumbList",
+				            "itemListElement": [
+				                {
+				                    "@type": "ListItem",
+				                    "position": 1,
+				                    "name": "Home",
+				                    "item": "{{ url_for('home') }}"
+				                },
+				                {
+				                    "@type": "ListItem",
+				                    "position": 2,
+				                    "name": "Blog",
+				                    "item": "{{ url_for('blog') }}"
+				                },
+				                {
+				                    "@type": "ListItem",
+				                    "position": 3,
+				                    "name": "{{ blogPost.title }}",
+				                    "item": "{{ full_url_for('blog-post', {'slug': blogPost.slug}) }}"
+				                }
+				            ]
+				        }
+	</script>
+
+	{% block styles %}
+		<style>
+			/* Markdown content styling */
+			.markdown-content h1 {
+				font-size: 2rem;
+				font-weight: 700;
+				margin-top: 1.5rem;
+				margin-bottom: 1rem;
+				color: #333333;
+			}
+
+			.markdown-content h2 {
+				font-size: 1.75rem;
+				font-weight: 700;
+				margin-top: 1.5rem;
+				margin-bottom: 0.75rem;
+				color: #333333;
+			}
+
+			.markdown-content h3 {
+				font-size: 1.5rem;
+				font-weight: 600;
+				margin-top: 1.25rem;
+				margin-bottom: 0.75rem;
+				color: #333333;
+			}
+
+			.markdown-content h4 {
+				font-size: 1.25rem;
+				font-weight: 600;
+				margin-top: 1rem;
+				margin-bottom: 0.5rem;
+				color: #333333;
+			}
+
+			.markdown-content p {
+				margin-bottom: 1rem;
+				line-height: 1.7;
+			}
+
+			.markdown-content ul,
+			.markdown-content ol {
+				margin-top: 0.5rem;
+				margin-bottom: 1rem;
+				margin-left: 1.5rem;
+			}
+
+			.markdown-content ul {
+				list-style-type: disc;
+			}
+
+			.markdown-content ol {
+				list-style-type: decimal;
+			}
+
+			.markdown-content li {
+				margin-bottom: 0.25rem;
+			}
+
+			.markdown-content a {
+				color: #EAB308;
+				text-decoration: underline;
+				transition: color 0.3s;
+			}
+
+			.markdown-content a:hover {
+				color: #CA8A04;
+			}
+
+			.markdown-content blockquote {
+				border-left: 4px solid #EAB308;
+				padding-left: 1rem;
+				margin-left: 0;
+				margin-right: 0;
+				font-style: italic;
+				color: #6b6b6b;
+			}
+
+			.markdown-content code {
+				font-family: monospace;
+				background-color: #f1f1f1;
+				padding: 0.2rem 0.4rem;
+				border-radius: 0.25rem;
+			}
+
+			.markdown-content pre {
+				background-color: #f1f1f1;
+				padding: 1rem;
+				border-radius: 0.5rem;
+				overflow-x: auto;
+				margin-bottom: 1rem;
+			}
+
+			.markdown-content pre code {
+				background-color: transparent;
+				padding: 0;
+			}
+
+			.markdown-content hr {
+				border-top: 1px solid #e5e5e5;
+				margin: 2rem 0;
+			}
+
+			.markdown-content img {
+				max-width: 100%;
+				height: auto;
+				border-radius: 0.25rem;
+				margin: 1rem 0;
+			}
+
+			.markdown-content table {
+				width: 100%;
+				border-collapse: collapse;
+				margin-bottom: 1rem;
+			}
+
+			.markdown-content th,
+			.markdown-content td {
+				border: 1px solid #e5e5e5;
+				padding: 0.5rem 0.75rem;
+				text-align: left;
+			}
+
+			.markdown-content th {
+				background-color: #f1f1f1;
+			}
+		</style>
+	{% endblock %}
+{% endblock %}

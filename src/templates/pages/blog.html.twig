@@ -1,0 +1,367 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ site.name }} | Blog{% endblock %}
+
+{% block meta %}
+    {{parent()}}
+    <meta name="description" content="{{ blog.meta_description|default('Explore our latest articles, guides, and insights on our blog.') }}"/>
+    <meta name="keywords" content="{{ blog.meta_keywords|default(site.keywords) }}"/>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="{{ url_for('blog') }}"/>
+    <meta property="og:title" content="{{ site.name }} | Blog"/>
+    <meta property="og:description" content="{{ blog.meta_description|default('Explore our latest articles, guides, and insights on our blog.') }}"/>
+    <meta property="og:image" content="{{ url_for('home') }}img/og.jpeg"/>
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image"/>
+    <meta property="twitter:url" content="{{ url_for('blog') }}"/>
+    <meta property="twitter:title" content="{{ site.name }} | Blog"/>
+    <meta property="twitter:description" content="{{ blog.meta_description|default('Explore our latest articles, guides, and insights on our blog.') }}"/>
+    <meta property="twitter:image" content="{{ url_for('home') }}img/og.jpeg"/>
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url_for('blog') }}"/>
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="py-16 md:py-24 bg-gradient-to-br from-gray-900 to-black text-white">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6" data-aos="fade-up" data-aos-duration="800">
+                    {{ blog.heading|default('Our Blog') }}
+                </h1>
+                <p class="text-lg text-gray-300 mb-8" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+                    {{ blog.subheading|default('Insights, thoughts, and resources from our team of experts') }}
+                </p>
+                
+                <!-- Search Bar -->
+                <div class="relative max-w-md mx-auto mt-8" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search articles..." 
+                        class="w-full px-5 py-3 bg-white bg-opacity-10 border border-gray-700 rounded-full text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                    >
+                    <button type="button" id="searchButton" class="absolute right-4 top-1/2 transform -translate-y-1/2">
+                        <svg class="w-5 h-5 text-gray-400 hover:text-yellow-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Filter (Optional) -->
+    {% if blog.categories is defined and blog.categories|length > 0 %}
+        <div class="bg-gray-50 py-4 border-b border-gray-200 sticky top-0 z-10">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-wrap justify-center gap-2" data-aos="fade-up" data-aos-duration="800">
+                    <button class="category-filter px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-yellow-400 text-black" data-category="all">
+                        All
+                    </button>
+                    {% for category in blog.categories %}
+                        <button class="category-filter px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-gray-200 hover:bg-gray-300 text-gray-800" data-category="{{ category|lower }}">
+                            {{ category }}
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Blog Posts Grid -->
+    <section class="py-16 md:py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <!-- No Results Message -->
+            <div id="noResults" class="hidden bg-gray-50 rounded-lg p-8 text-center mb-12" data-aos="fade-up" data-aos-duration="800">
+                <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 class="text-xl font-bold mb-2">No matching articles found</h3>
+                <p class="text-gray-600 mb-6">We couldn't find any articles matching your search criteria.</p>
+                <button id="resetSearch" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-6 py-2 rounded-md transition-all duration-300">
+                    View All Articles
+                </button>
+            </div>
+
+            <!-- Posts Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for post in blogPosts|default([
+                    {
+                        title: 'Article Title One',
+                        slug: 'article-one',
+                        excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                        date: 'January 15, 2024',
+                        category: 'Category One',
+                        featuredImage: {
+                            url: '/img/blog1.avif',
+                            title: 'Blog post featured image'
+                        }
+                    },
+                    {
+                        title: 'Article Title Two',
+                        slug: 'article-two',
+                        excerpt: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                        date: 'February 3, 2024',
+                        category: 'Category Two',
+                        featuredImage: {
+                            url: '/img/blog2.avif',
+                            title: 'Blog post featured image'
+                        }
+                    },
+                    {
+                        title: 'Article Title Three',
+                        slug: 'article-three',
+                        excerpt: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+                        date: 'February 28, 2024',
+                        category: 'Category One',
+                        featuredImage: {
+                            url: '/img/blog3.avif',
+                            title: 'Blog post featured image'
+                        }
+                    }
+                ]) %}
+                    <div 
+                        class="blog-post bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-2" 
+                        data-title="{{ post.title|lower }}" 
+                        data-excerpt="{{ post.excerpt|lower }}" 
+                        data-category="{{ post.category|lower }}"
+                        data-aos="fade-up" 
+                        data-aos-duration="800" 
+                        data-aos-delay="{{ 100 * loop.index }}"
+                    >
+                        {% if post.featuredImage.url %}
+                            <a href="{{ url_for('blog-post', {'slug': post.slug}) }}" class="block h-48 overflow-hidden">
+                                <img 
+                                    src="{{ post.featuredImage.url }}" 
+                                    alt="{{ post.featuredImage.title|default(post.title) }}" 
+                                    class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                                >
+                            </a>
+                        {% endif %}
+                        
+                        <div class="p-6">
+                            <!-- Category Badge -->
+                            {% if post.category %}
+                                <div class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full mb-3">
+                                    {{ post.category }}
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Post Title -->
+                            <a href="{{ url_for('blog-post', {'slug': post.slug}) }}" class="block hover:text-yellow-500 transition-colors">
+                                <h3 class="text-xl font-bold mb-2 leading-tight">{{ post.title }}</h3>
+                            </a>
+                            
+                            <!-- Excerpt -->
+                            <p class="text-gray-600 mb-4">
+                                {{ post.excerpt|striptags|slice(0, 120) }}...
+                            </p>
+                            
+                            <!-- Footer with Date and Share -->
+                            <div class="flex justify-between items-center mt-auto">
+                                <span class="text-gray-500 text-sm">{{ post.date }}</span>
+                                
+                                <!-- Share buttons -->
+                                <div class="flex space-x-2">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ url_for('blog-post', {'slug': post.slug})|url_encode }}" 
+                                       target="_blank" 
+                                       class="text-gray-400 hover:text-[#3b5998] transition-colors" 
+                                       aria-label="Share on Facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    
+                                    <a href="https://twitter.com/intent/tweet?url={{ url_for('blog-post', {'slug': post.slug})|url_encode }}&text={{ post.title|url_encode }}" 
+                                       target="_blank" 
+                                       class="text-gray-400 hover:text-[#1DA1F2] transition-colors" 
+                                       aria-label="Share on Twitter">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if blog.pagination is defined and blog.pagination.totalPages > 1 %}
+                <div class="mt-16 flex justify-center" data-aos="fade-up" data-aos-duration="800">
+                    <div class="flex space-x-1">
+                        <!-- Previous -->
+                        {% if blog.pagination.currentPage > 1 %}
+                            <a href="{{ url_for('blog', {'page': blog.pagination.currentPage - 1}) }}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </a>
+                        {% endif %}
+                        
+                        <!-- Pages -->
+                        {% for i in 1..blog.pagination.totalPages %}
+                            <a href="{{ url_for('blog', {'page': i}) }}" 
+                               class="px-4 py-2 border {% if i == blog.pagination.currentPage %}bg-yellow-400 border-yellow-400 text-black{% else %}border-gray-300 text-gray-700 hover:bg-gray-50{% endif %} rounded-md transition-colors">
+                                {{ i }}
+                            </a>
+                        {% endfor %}
+                        
+                        <!-- Next -->
+                        {% if blog.pagination.currentPage < blog.pagination.totalPages %}
+                            <a href="{{ url_for('blog', {'page': blog.pagination.currentPage + 1}) }}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Newsletter Section (Optional) -->
+	<section class="py-16 md:py-20 bg-white">
+		<div class="container mx-auto px-6">
+			<div class="bg-gradient-to-r from-yellow-400 to-yellow-300 rounded-xl py-12 px-8 md:px-12 text-center text-gray-900 shadow-xl">
+				<h2 class="text-3xl md:text-4xl font-bold mb-6" data-aos="fade-up" data-aos-duration="800">
+					{{ blog.newsletter_heading|default('Subscribe to Our Newsletter') }}
+				</h2>
+				<p class="text-lg text-gray-800 mb-8 max-w-2xl mx-auto" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+					{{ blog.newsletter_text|default('Stay updated with our latest articles, news and insights delivered straight to your inbox.') }}
+				</p>
+				<form class="flex flex-col md:flex-row gap-4 justify-center max-w-md mx-auto" data-aos="fade-up" data-aos-duration="800" data-aos-delay="200">
+					<input 
+						type="email" 
+						placeholder="Enter your email" 
+						class="flex-grow px-5 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900"
+						required
+					>
+					<button type="submit" class="bg-gray-900 text-white px-6 py-3 rounded-md hover:bg-gray-800 transition-colors">
+						Subscribe
+					</button>
+				</form>
+			</div>
+		</div>
+	</section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const resetButton = document.getElementById('resetSearch');
+            const noResults = document.getElementById('noResults');
+            const blogPosts = document.querySelectorAll('.blog-post');
+            
+            // Function to remove diacritics
+            function removeDiacritics(str) {
+                return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            }
+            
+            // Function to perform the search
+            function performSearch(query) {
+                query = removeDiacritics(query.toLowerCase().trim());
+                let found = false;
+                
+                // If empty query, show all
+                if (query === '') {
+                    blogPosts.forEach(post => post.style.display = 'block');
+                    noResults.classList.add('hidden');
+                    return;
+                }
+                
+                // Filter posts
+                blogPosts.forEach(post => {
+                    const title = removeDiacritics(post.dataset.title);
+                    const excerpt = removeDiacritics(post.dataset.excerpt);
+                    const category = removeDiacritics(post.dataset.category);
+                    
+                    if (title.includes(query) || excerpt.includes(query) || category.includes(query)) {
+                        post.style.display = 'block';
+                        found = true;
+                    } else {
+                        post.style.display = 'none';
+                    }
+                });
+                
+                // Show/hide no results message
+                if (!found) {
+                    noResults.classList.remove('hidden');
+                } else {
+                    noResults.classList.add('hidden');
+                }
+            }
+            
+            // Event listeners for search
+            searchButton.addEventListener('click', function() {
+                performSearch(searchInput.value);
+            });
+            
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch(searchInput.value);
+                }
+            });
+            
+            // Reset search
+            resetButton.addEventListener('click', function() {
+                searchInput.value = '';
+                blogPosts.forEach(post => post.style.display = 'block');
+                noResults.classList.add('hidden');
+                
+                // Reset category filters if they exist
+                const categoryFilters = document.querySelectorAll('.category-filter');
+                categoryFilters.forEach(filter => {
+                    filter.classList.remove('bg-yellow-400', 'text-black');
+                    if (filter.dataset.category !== 'all') {
+                        filter.classList.add('bg-gray-200', 'text-gray-800');
+                    } else {
+                        filter.classList.add('bg-yellow-400', 'text-black');
+                    }
+                });
+            });
+            
+            // Category filtering
+            const categoryFilters = document.querySelectorAll('.category-filter');
+            if (categoryFilters.length > 0) {
+                categoryFilters.forEach(filter => {
+                    filter.addEventListener('click', function() {
+                        const category = this.dataset.category;
+                        
+                        // Update button styles
+                        categoryFilters.forEach(btn => {
+                            btn.classList.remove('bg-yellow-400', 'text-black');
+                            btn.classList.add('bg-gray-200', 'text-gray-800');
+                        });
+                        this.classList.remove('bg-gray-200', 'text-gray-800');
+                        this.classList.add('bg-yellow-400', 'text-black');
+                        
+                        // Filter posts
+                        let found = false;
+                        blogPosts.forEach(post => {
+                            if (category === 'all' || post.dataset.category === category.toLowerCase()) {
+                                post.style.display = 'block';
+                                found = true;
+                            } else {
+                                post.style.display = 'none';
+                            }
+                        });
+                        
+                        // Show/hide no results
+                        if (!found) {
+                            noResults.classList.remove('hidden');
+                        } else {
+                            noResults.classList.add('hidden');
+                        }
+                        
+                        // Clear search input
+                        searchInput.value = '';
+                    });
+                });
+            }
+        });
+    </script>
+{% endblock %}

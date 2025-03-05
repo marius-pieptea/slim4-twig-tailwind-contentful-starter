@@ -1,0 +1,15 @@
+{
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.7",
+        "twig/twig": "^3.18",
+        "slim/twig-view": "^3.4",
+        "contentful/contentful": "^7.1",
+        "vlucas/phpdotenv": "^5.6",
+        "league/commonmark": "^2.6"
+    },
+    "scripts": {
+        "start": "php -S localhost:8000 -t public",
+        "sync": "browser-sync start --proxy \"localhost:8000\" --files \"src/**/*\""
+    }
+}

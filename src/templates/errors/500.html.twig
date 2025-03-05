@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Server Error - Maria Gheordunescu
+{% endblock %}
+
+{% block content %}
+	<div class="min-h-screen bg-[#1a1a1a] flex items-center justify-center px-4">
+		<div class="text-center">
+			<h1 class="text-6xl font-bold text-[#C8B494] mb-4">500</h1>
+			<p class="text-xl text-white mb-8">A apărut o eroare neașteptată</p>
+			<a href="{{ url_for('home') }}" class="inline-block bg-[#C8B494] text-white px-6 py-3 rounded-lg hover:bg-[#C8B494] transition-colors">
+				Înapoi la pagina principală
+			</a>
+		</div>
+	</div>
+{% endblock %}

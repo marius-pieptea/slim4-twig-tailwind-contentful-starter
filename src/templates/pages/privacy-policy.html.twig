@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Privacy Policy - {{ site.name }}
+{% endblock %}
+
+{% block meta %}
+    <meta name="description" content="The privacy policy of {{ site.name }} explains how we collect, use, and protect your personal information."/>
+    <meta name="robots" content="noindex, follow"/>
+    <meta name="keywords" content="privacy policy, data protection, GDPR, {{ site.name }}"/>
+{% endblock %}
+
+{% block content %}
+    {{ parent() }}
+
+    <section class="py-16 mt-20" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="300" data-aos-offset="0">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto bg-white p-6 md:p-8 lg:p-10 rounded-lg shadow-lg" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="400" data-aos-offset="0">
+                <h1 class="text-3xl md:text-4xl font-bold mb-8">Privacy Policy</h1>
+
+                <div class="prose prose-lg max-w-none">
+                    <p class="text-gray-700 mb-6">
+                        Last updated:
+                        {{ "now"|date("m/d/Y") }}
+                    </p>
+
+                    <h2 class="text-2xl font-semibold text-black mt-8 mb-4" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="500" data-aos-offset="0">1. Introduction</h2>
+                    <p class="text-gray-700 mb-4">
+                        Welcome to {{ site.name }}'s website. Protecting the confidentiality of your personal data is important to us. This privacy policy describes the types of information we may collect from you or that you may provide when you visit our website and our practices regarding the collection, use, maintenance, protection, and disclosure of this information.
+                    </p>
+
+                    <h2 class="text-2xl font-semibold text-black mt-8 mb-4" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="500" data-aos-offset="0">2. Information We Collect</h2>
+
+                    <h3 class="text-xl font-semibold text-black mt-6 mb-3" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="600" data-aos-offset="0">Personal Data</h3>
+                    <p class="text-gray-700 mb-4">
+                        When you contact us through our contact form, we may collect the following personal information:
+                    </p>
+                    <ul class="text-gray-700 mb-6 list-disc pl-6">
+                        <li class="mb-2">First and last name</li>
+                        <li class="mb-2">Email address</li>
+                        <li class="mb-2">Phone number</li>
+                        <li class="mb-2">Content of your message</li>
+                    </ul>
+
+                    <h3 class="text-xl font-semibold text-black mt-6 mb-3" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="600" data-aos-offset="0">Automatically Collected Data</h3>
+                    <p class="text-gray-700 mb-4">
+                        When you visit our website, we may automatically collect certain information about your device, including information about your web browser, IP address, time zone, and some of the cookies installed on your device. Additionally, as you browse the site, we collect information about the individual web pages or products you view, which websites or search terms referred you to our site, and information about how you interact with the site.
+                    </p>
+
+                    <h2 class="text-2xl font-semibold text-black mt-8 mb-4" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="500" data-aos-offset="0">3. How We Use Your Information</h2>
+                    <p class="text-gray-700 mb-4">
+                        We use the information we collect for various purposes, including:
+                    </p>
+                    <ul class="text-gray-700 mb-6 list-disc pl-6">
+                        <li class="mb-2">To provide our services and products</li>
+                        <li class="mb-2">To respond to your questions and requests</li>
+                        <li class="mb-2">To improve and personalize your experience on our website</li>
+                        <li class="mb-2">To protect our website and prevent fraudulent activities</li>
+                        <li class="mb-2">To comply with legal obligations</li>
+                    </ul>
+
+                    <h2 class="text-2xl font-semibold text-black mt-8 mb-4" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="500" data-aos-offset="0">4. Cookies and Similar Technologies</h2>
+                    <p class="text-gray-700 mb-4">
+                        Our website may use "cookies" - small text files stored on your device to improve your browsing experience. Cookies allow us to analyze traffic patterns and provide you with a personalized experience.
+                    </p>
+                    <p class="text-gray-700 mb-4">
+                        You can configure your browser to refuse all or some cookies, or to alert you when websites set or access cookies. If you disable or refuse cookies, please note that some parts of this site may become inaccessible or may not function properly.
+                    </p>
+
+                    <h2 class="text-2xl font-semibold text-black mt-8 mb-4" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="500" data-aos-offset="0">5. Disclosure of Your Data</h2>
+                    <p class="text-gray-700 mb-6">
+                        We will not sell, trade, or transfer your personal data to third parties without your consent, except as provided in this Privacy Policy.
+                    </p>
+                    <p class="text-gray-700 mb-4">
+                        We may disclose your personal data in the following situations:
+                    </p>
+                    <ul class="text-gray-700 mb-6 list-disc pl-6">
+                        <li class="mb-2">To service providers who assist us in our business operations (such as payment processing or web hosting services)</li>
+                        <li class="mb-2">To comply with the law, respond to legal process, or governmental request</li>
+                        <li class="mb-2">To protect our rights, property, or safety, our customers, or others</li>
+                    </ul>
+
+                    <h2 class="text-2xl font-semibold text-black mt-8 mb-4" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="500" data-aos-offset="0">6. Data Security</h2>
+                    <p class="text-gray-700 mb-4">
+                        We have implemented security measures to protect your personal data against accidental loss, unauthorized use or access, alteration, or disclosure. However, the transmission of information via the internet is not completely secure. Although we will do our best to protect your personal data, we cannot guarantee the security of data transmitted to our website.
+                    </p>
+
+                    <h2 class="text-2xl font-semibold text-black mt-8 mb-4" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="500" data-aos-offset="0">7. Your Rights</h2>
+                    <p class="text-gray-700 mb-4">
+                        In accordance with applicable data protection laws, you may have the following rights regarding your personal data:
+                    </p>
+                    <ul class="text-gray-700 mb-6 list-disc pl-6">
+                        <li class="mb-2">Right to access your personal data</li>
+                        <li class="mb-2">Right to rectify incorrect personal data</li>
+                        <li class="mb-2">Right to erasure of personal data</li>
+                        <li class="mb-2">Right to restrict processing of personal data</li>
+                        <li class="mb-2">Right to data portability</li>
+                        <li class="mb-2">Right to object to processing of personal data</li>
+                    </ul>
+                    <p class="text-gray-700 mb-4">
+                        To exercise any of these rights, please contact us using the contact information provided below.
+                    </p>
+
+                    <h2 class="text-2xl font-semibold text-black mt-8 mb-4" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="500" data-aos-offset="0">8. Changes to Privacy Policy</h2>
+                    <p class="text-gray-700 mb-4">
+                        We reserve the right to modify this privacy policy at any time. Any changes will be posted on this page. We encourage you to periodically review this page to stay informed about any changes.
+                    </p>
+
+                    <h2 class="text-2xl font-semibold text-black mt-8 mb-4" data-aos="fade-zoom-in" data-aos-easing="ease-in-back" data-aos-delay="500" data-aos-offset="0">9. Contact</h2>
+                    <p class="text-gray-700 mb-4">
+                        If you have questions or concerns about this privacy policy or our data protection practices, please contact us at:
+                    </p>
+                    <p class="text-gray-700 mb-4">
+                        <strong>Email:</strong>
+                        {{ contact.email }}<br>
+                        <strong>Phone:</strong>
+                        {{ contact.phone }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% include 'components/cookie-consent.html.twig' %}
+{% endblock %}

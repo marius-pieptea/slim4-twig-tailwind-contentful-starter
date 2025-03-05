@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Apply Syne font to all headers and links */
+h1, h2, h3, h4, h5, h6, a {
+    font-family: 'Merriweather', sans-serif ;
+}
+
+
+/* Apply Poppins font to everything else */
+body, p {
+    font-family: 'Merriweather', sans-serif !important;
+}
+
